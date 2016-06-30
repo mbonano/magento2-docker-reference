@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <!--<add id="Chazmar_SingleForm::chazmar_menu" title="Chazmar Reference Extensions" module="Chazmar_SingleForm"
+             sortOrder="10" resource="Chazmar_SingleForm::chazmar_menu"/>-->
+
+        <!--<add id="Chazmar_SingleForm::chazmar_references" title="Reference Extensions" module="Chazmar_SingleForm" sortOrder="10"
+             parent="Chazmar_SingleForm::chazmar_menu" resource="Chazmar_SingleForm::chazmar_references"/>-->
+
+        <add id="Chazmar_MultiForm::chazmar_multiform" title="Multi Form" module="Chazmar_MultiForm"
+             sortOrder="10" parent="Chazmar_SingleForm::chazmar_references" action="chazmar_multiform/sampleform/edit"
+             resource="Chazmar_MultiForm::chazmar_multiform"/>
+    </menu>
+</config>

@@ -1,0 +1,66 @@
+#!/bin/bash
+
+COMMAND=$1
+SCRIPT=`basename "$0"`
+declare -a SUPPORTED_COMMANDS=(start stop restart appserver-logs debug-logs system-logs ssh magento clean)
+command_list=$(printf ", %s" "${SUPPORTED_COMMANDS[@]}")
+function log {
+               echo "[${SCRIPT}] => ${1}"
+           }
+
+function command_not_found {
+    log "One of the following arguments was expected but not supplied: ${command_list:2}"
+    exit 1
+}
+
+# guard clause for unexpected commands
+if [ -z "${COMMAND}" ] || [[ ! "${SUPPORTED_COMMANDS[@]}" =~ "${COMMAND}" ]]
+then
+    command_not_found
+fi
+
+# build the container name base on parent directory name
+PARENT_DIR="$(basename "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" )"
+CONTAINER_PREFIX="$( echo $PARENT_DIR | tr '[:upper:]' '[:lower:]')"
+CONTAINER_NAME=$CONTAINER_PREFIX"_phpfpm_1"
+
+# set working directory as parent directory of script
+cd "$(dirname "$0")"
+
+if [ $COMMAND == "start" ]
+then
+	docker-compose up -d
+elif [ $COMMAND == "stop" ]
+then
+	docker-compose down
+elif [ $COMMAND == "restart" ]
+then
+	docker-compose down
+	docker-compose up -d
+elif [ $COMMAND == "appserver-logs" ]
+then
+	docker logs -f $CONTAINER_NAME
+elif [ $COMMAND == "debug-logs" ]
+then
+	docker exec $CONTAINER_NAME tail -f var/log/debug.log
+elif [ $COMMAND == "system-logs" ]
+then
+	docker exec $CONTAINER_NAME tail -f var/log/system.log
+elif [ $COMMAND == "ssh" ]
+then
+	docker exec -it $CONTAINER_NAME bash -c "export TERM=xterm; exec bash"
+elif [ $COMMAND == "magento" ]
+then
+    # pass all additional args to the magento cli
+	docker exec $CONTAINER_NAME ./bin/magento "${@:2}"
+elif [ $COMMAND == "clean" ]
+then
+    # reset file permissions
+	docker exec $CONTAINER_NAME chown -R www-data:www-data /srv/www
+	# run setup:upgrade
+	docker exec $CONTAINER_NAME ./bin/magento setup:upgrade
+	# flush cache
+	docker exec $CONTAINER_NAME ./bin/magento cache:flush
+else
+    command_not_found
+fi

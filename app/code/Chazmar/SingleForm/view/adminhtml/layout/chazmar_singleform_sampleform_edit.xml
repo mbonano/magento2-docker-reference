@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Chazmar References: Single Form</title>
+    </head>
+    <body>
+        <referenceContainer name="left">
+            <block class="Chazmar\SingleForm\Block\Adminhtml\SampleForm\Edit\TabSection" name="chazmar_singleform_sampleform_tabsection">
+                <block class="Chazmar\SingleForm\Block\Adminhtml\SampleForm\Edit\Tab\SampleTab" name="chazmar_singleform_sampleform_edit_tab_sampletab"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">sampletab_section</argument>
+                    <argument name="block" xsi:type="string">chazmar_singleform_sampleform_edit_tab_sampletab</argument>
+                </action>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="content">
+            <block class="Chazmar\SingleForm\Block\Adminhtml\SampleForm\Edit" name="chazmar_singleform_sampleform_header"/>
+        </referenceContainer>
+    </body>
+</page>

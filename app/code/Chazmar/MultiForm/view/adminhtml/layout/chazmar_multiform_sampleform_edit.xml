@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Chazmar References: Multi Form</title>
+    </head>
+    <body>
+        <referenceContainer name="left">
+            <block class="Chazmar\MultiForm\Block\Adminhtml\SampleForm\Edit\TabSection" name="chazmar_multiform_sampleform_tabsection">
+                <block class="Chazmar\MultiForm\Block\Adminhtml\SampleForm\Edit\Tab\SampleTab1" name="chazmar_multiform_sampleform_edit_tab_sampletab1"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">sampletab1_section</argument>
+                    <argument name="block" xsi:type="string">chazmar_multiform_sampleform_edit_tab_sampletab1</argument>
+                </action>
+                <block class="Chazmar\MultiForm\Block\Adminhtml\SampleForm\Edit\Tab\SampleTab2" name="chazmar_multiform_sampleform_edit_tab_sampletab2"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">sampletab2_section</argument>
+                    <argument name="block" xsi:type="string">chazmar_multiform_sampleform_edit_tab_sampletab2</argument>
+                </action>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="content">
+            <block class="Chazmar\MultiForm\Block\Adminhtml\SampleForm\Edit" name="chazmar_multiform_sampleform_header"/>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,76 @@
+# Magento2 Docker Reference (https://github.com/mbonano/magento2-docker-reference)
+# Version 4.1.0
+
+app:
+  image: mageinferno/magento2-nginx:1.9.14-0
+  links:
+    - phpfpm
+    - db
+  volumes_from:
+    - appdata
+  ports:
+    - 9050:80
+
+appdata:
+  image: tianon/true
+  volumes:
+    - /srv/www
+    - ./app/code/:/srv/www/app/code
+    - ./app/design/adminhtml/:/srv/www/app/design/adminhtml/
+    - ./app/design/frontend/:/srv/www/app/design/frontend/
+
+phpfpm:
+  image: mbonano/magento2-php:7.0.5-fpm-0
+  links:
+    - db
+  volumes_from:
+    - appdata
+  environment:
+    - PHP_MEMORY_LIMIT=2048M
+    - M2SETUP_DB_HOST=db
+    - M2SETUP_DB_PORT=3306
+    - M2SETUP_OS_USER=www-data
+    - M2SETUP_OS_GROUP=www-data
+
+db:
+  image: mariadb:10.1.13
+  volumes_from:
+    - dbdata
+  ports:
+    - 9051:3306
+  environment:
+    - MYSQL_ROOT_PASSWORD=magentodev
+    - MYSQL_DATABASE=magentodev
+    - MYSQL_USER=magentodev
+    - MYSQL_PASSWORD=magentodev
+
+dbdata:
+  image: tianon/true
+  volumes:
+    - /var/lib/mysql
+
+setup:
+  image: mbonano/magento2-php:7.0.5-fpm-0
+  command: /usr/local/bin/mage-setup
+  links:
+    - db
+  volumes_from:
+    - appdata
+  environment:
+    - M2SETUP_DB_HOST=db
+    - M2SETUP_DB_PORT=3306
+    - M2SETUP_DB_NAME=magentodev
+    - M2SETUP_DB_USER=magentodev
+    - M2SETUP_DB_PASSWORD=magentodev
+    - M2SETUP_BASE_URL=http://localhost:9050/
+    - M2SETUP_BACKEND_FRONTNAME=admin
+    - M2SETUP_ADMIN_FIRSTNAME=Admin
+    - M2SETUP_ADMIN_LASTNAME=User
+    - M2SETUP_ADMIN_EMAIL=magentodev@mock-email-provider.com
+    - M2SETUP_ADMIN_USER=magentodev
+    - M2SETUP_ADMIN_PASSWORD=magentodev123
+    - M2SETUP_OS_USER=www-data
+    - M2SETUP_OS_GROUP=www-data
+    - M2SETUP_VERSION=2.0.7
+    - M2SETUP_USE_SAMPLE_DATA=false
+    - M2SETUP_USE_ARCHIVE=true
